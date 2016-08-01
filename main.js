@@ -19,39 +19,50 @@ function getJSON(url, cl, err){
 }
 
 
-function makeItem(heading, success, desc) {
+function makeItem(heading, success, url, desc, image) {
     var item = document.createElement('li');
     if (success)
         item.classList.add("streamer-active");
     var itemHeading = document.createElement('h2');
     var itemHeadingAnchor = document.createElement('a');
+    var itemImage = document.createElement('img');
+    itemImage.src = image;
     itemHeadingAnchor.appendChild(document.createTextNode(heading));
-    itemHeadingAnchor.href = "https://www.twitch.tv/" + heading;
+    itemHeadingAnchor.href = url;
     itemHeading.appendChild(itemHeadingAnchor);
 
     var itemDescription = document.createElement('p');
     itemDescription.appendChild(document.createTextNode(desc));
 
+    item.appendChild(itemImage);
     item.appendChild(itemHeading);
     item.appendChild(itemDescription);
     return item;
 }
 
 function getStatus(name, cl) {
-    getJSON("https://api.twitch.tv/kraken/streams/" + name, function (res) {
-        console.log(res);
-        cl({
-            name: name,
-            success: true,
-            desc: "offline"
-        });
-    }, function () {
+    function error(){
         cl({
             name: name,
             success: false,
-            desc: "Offline"
+            desc: "Account closed",
+            logo: "https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png",
+            url: null
         });
-    })
+    }
+    getJSON("https://api.twitch.tv/kraken/streams/" + name, function (res) {
+        getJSON("https://api.twitch.tv/kraken/channels/" + name, function (res2) {
+            console.log(res);
+            console.log(res2);
+            cl({
+                name: name,
+                success: res.stream ? true : false,
+                desc: res.stream ? res.stream.channel.game + " " + res.stream.channel.status : "Offline",
+                logo: res2.logo,
+                url: res2.url
+            });
+        }, error)
+    }, error);
 }
 var arr = [
     "comster404",
@@ -67,6 +78,6 @@ var arr = [
 ];
 for (var i = 0; i < arr.length; i++) {
     getStatus(arr[i], function (r) {
-        document.getElementById("streamers").appendChild(makeItem(r.name, r.success, r.desc));
+        document.getElementById("streamers").appendChild(makeItem(r.name, r.success, r.url,  r.desc, r.logo));
     });
 }
