@@ -76,16 +76,15 @@ li.streamer-active a{
     }
 }
 @media only screen and (max-width: 800px)  {
-    .streamers  {
-        list-style: none;
-        padding: 0;
-        background: #f3f1ef;
-    }
     .streamers li{
-        background: #4A5E82;
-        color: #8ea7c2;
-        margin: 5px 0;
-        display: flex;
-        align-items: center
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .streamers h2 {
+        width: 100%;
+    }
+    .streamers p{
+        display: inline-block;
+        width: 100%;
     }
 }
