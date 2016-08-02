@@ -18,7 +18,7 @@ body {
 .container h1 {
     text-transform: uppercase;
     color: #f3f1ef;
-    margin: 0;
+    padding: 1rem 0 0 2rem;
 }
 .streamers  {
     list-style: none;
@@ -26,28 +26,66 @@ body {
     background: #f3f1ef;
 }
 .streamers li{
-    background: #c9e6f3;
+    background: #4A5E82;
+    color: #8ea7c2;
     margin: 5px 0;
+    display: flex;
+    align-items: center
+}
+.streamers a{
+    color: #b8cca6;
+    text-decoration: none;
+}
+
+.streamers a:hover{
+    text-decoration: underline;
 }
 .streamers img {
     display: inline-block;
-    width: 100px;
+    max-width: 10rem;
+    width: 30vw;
+    max-height: 10rem;
+    height: 30vw;
+    border-radius: 50%;
+    border: 0.35rem solid #f3f1ef;
+    margin: 0.5rem;
 }
 .streamers h2 {
     display: inline-block;
+    text-align: center;
+    width: calc((100%-10rem)*0.3);
     margin: 0;
 }
 .streamers p{
     display: inline-block;
+    width: calc((100%-10rem)*0.7);
     margin: 0;
+    text-align: center;
 }
-.streamer-active {
-    background: red !important;
+li.streamer-active {
+    background: #B8CCA6;
+    color: #5c5457;
 }
-
+li.streamer-active a{
+    color: #4a5e82;
+}
 
 @media only screen and (max-width: 900px)  {
     .container {
         width: 100vw;
+    }
+}
+@media only screen and (max-width: 800px)  {
+    .streamers  {
+        list-style: none;
+        padding: 0;
+        background: #f3f1ef;
+    }
+    .streamers li{
+        background: #4A5E82;
+        color: #8ea7c2;
+        margin: 5px 0;
+        display: flex;
+        align-items: center
     }
 }
