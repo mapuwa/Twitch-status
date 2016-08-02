@@ -53,12 +53,12 @@ body {
 .streamers h2 {
     display: inline-block;
     text-align: center;
-    width: calc((100%-10rem)*0.3);
+    width: calc((100% - 10rem)*0.3);
     margin: 0;
 }
 .streamers p{
     display: inline-block;
-    width: calc((100%-10rem)*0.7);
+    width: calc((100% - 10rem)*0.7);
     margin: 0;
     text-align: center;
 }

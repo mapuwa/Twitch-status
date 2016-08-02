@@ -21,21 +21,26 @@ function getJSON(url, cl, err){
 
 function makeItem(heading, success, url, desc, image) {
     var item = document.createElement('li');
-    if (success)
-        item.classList.add("streamer-active");
-    var itemHeading = document.createElement('h2');
-    var itemHeadingAnchor = document.createElement('a');
+    if (success) item.classList.add("streamer-active");
+
     var itemImage = document.createElement('img');
     itemImage.src = image;
-    itemHeadingAnchor.appendChild(document.createTextNode(heading));
-    itemHeadingAnchor.href = url;
-    itemHeading.appendChild(itemHeadingAnchor);
+    item.appendChild(itemImage);
+
+
+    var itemHeading = document.createElement('h2');
+    if (url) {
+        var itemHeadingAnchor = document.createElement('a');
+        itemHeadingAnchor.appendChild(document.createTextNode(heading));
+        itemHeadingAnchor.href = url;
+        itemHeading.appendChild(itemHeadingAnchor);
+    }
+    else
+        itemHeading.appendChild(document.createTextNode(heading));
+    item.appendChild(itemHeading);
 
     var itemDescription = document.createElement('p');
     itemDescription.appendChild(document.createTextNode(desc));
-
-    item.appendChild(itemImage);
-    item.appendChild(itemHeading);
     item.appendChild(itemDescription);
     return item;
 }
@@ -52,8 +57,6 @@ function getStatus(name, cl) {
     }
     getJSON("https://api.twitch.tv/kraken/streams/" + name, function (res) {
         getJSON("https://api.twitch.tv/kraken/channels/" + name, function (res2) {
-            console.log(res);
-            console.log(res2);
             cl({
                 name: name,
                 success: res.stream ? true : false,
@@ -76,8 +79,15 @@ var arr = [
     "RobotCaleb",
     "noobs2ninjas"
 ];
+var results = [];
 for (var i = 0; i < arr.length; i++) {
     getStatus(arr[i], function (r) {
-        document.getElementById("streamers").appendChild(makeItem(r.name, r.success, r.url,  r.desc, r.logo));
+        results.push(r);
+        if (results.length == arr.length) {
+            results.sort(function (a, b) { return !a.success; });
+            for (var j = 0; j < results.length; j++)
+                document.getElementById("streamers").appendChild(makeItem(results[j].name, results[j].success,
+                                                                    results[j].url,  results[j].desc, results[j].logo));
+        }
     });
 }
