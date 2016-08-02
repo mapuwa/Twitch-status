@@ -17,8 +17,42 @@ function getJSON(url, cl, err){
     xhttp.open("GET", url, true);
     xhttp.send();
 }
-
-
+/**
+ * Connect Twitch API and get info about channel and about currently streamed video
+ * @param name name of the channel
+ * @param cl function, which is called with parsed JSON
+ */
+function getStatus(name, cl) {
+    function error(){
+        cl({
+            name: name,
+            success: false,
+            desc: "Account closed",
+            logo: "https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png",
+            url: null
+        });
+    }
+    getJSON("https://api.twitch.tv/kraken/streams/" + name, function (res) {
+        getJSON("https://api.twitch.tv/kraken/channels/" + name, function (res2) {
+            cl({
+                name: name,
+                success: res.stream ? true : false,
+                desc: res.stream ? res.stream.channel.game + " " + res.stream.channel.status : "Offline",
+                logo: res2.logo,
+                url: res2.url
+            });
+        }, error)
+    }, error);
+}
+/**
+ * Factory for list item
+ * @param heading Name of the channel
+ * @param success Is channel streaming?
+ * @param url Channel URL
+ * @param desc Channel status
+ * @param image Channel logo
+ * @returns {Element} List item
+ */
 function makeItem(heading, success, url, desc, image) {
     var item = document.createElement('li');
     if (success) item.classList.add("streamer-active");
@@ -45,28 +79,7 @@ function makeItem(heading, success, url, desc, image) {
     return item;
 }
 
-function getStatus(name, cl) {
-    function error(){
-        cl({
-            name: name,
-            success: false,
-            desc: "Account closed",
-            logo: "https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png",
-            url: null
-        });
-    }
-    getJSON("https://api.twitch.tv/kraken/streams/" + name, function (res) {
-        getJSON("https://api.twitch.tv/kraken/channels/" + name, function (res2) {
-            cl({
-                name: name,
-                success: res.stream ? true : false,
-                desc: res.stream ? res.stream.channel.game + " " + res.stream.channel.status : "Offline",
-                logo: res2.logo,
-                url: res2.url
-            });
-        }, error)
-    }, error);
-}
+
 var arr = [
     "comster404",
     "brunofin",
